@@ -36,7 +36,7 @@ jobs:
       - name: Show Format Errors
         run: cat format_errors.txt
 
-  # Job separado para aplicar terraform fmt si se aprueba
+  # Job separado para aplicar terraform fmt si se aprueba y revision final de los cambios realizados 
   terraform_format:
     name: 'Apply Terraform Fmt'
     runs-on: ubuntu-latest
@@ -48,3 +48,12 @@ jobs:
 
       - name: Apply Terraform Fmt
         run: terraform fmt
+        # Paso 7: Comprobar si hubo cambios después de aplicar terraform fmt
+      - name: Check for modifications
+        run: |
+          git diff --exit-code > fmt_changes.txt || echo "Code modified by terraform fmt" > fmt_changes.txt
+    
+    # Paso 8: Mostrar el resultado del diff (si hubo cambios)
+      - name: Show format modifications
+        run: cat fmt_changes.txt
+        if: success()  # Este paso solo se ejecutará si hay cambios.
