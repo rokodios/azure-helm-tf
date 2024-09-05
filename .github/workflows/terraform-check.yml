@@ -12,7 +12,6 @@ jobs:
   terraform:
     name: 'Terraform Format & Validate'
     runs-on: ubuntu-latest
-    environment: git-sensible-info
 
     steps:
       # Paso 1: Checkout del código
@@ -43,6 +42,7 @@ jobs:
   terraform_format:
     name: 'Apply Terraform Fmt'
     runs-on: ubuntu-latest
+    environment: git-sensible-info
     needs: terraform  # Solo se ejecuta después de que el primer job termine
     environment: approval-needed  # Requiere aprobación manual
     steps:
