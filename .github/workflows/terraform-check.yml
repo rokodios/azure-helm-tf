@@ -12,6 +12,7 @@ jobs:
   terraform:
     name: 'Terraform Format & Validate'
     runs-on: ubuntu-latest
+    environment: git-sensible-info
 
     steps:
       # Paso 1: Checkout del código
