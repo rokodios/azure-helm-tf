@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: git-sensible-info
     needs: terraform  # Solo se ejecuta después de que el primer job termine
-    environment: approval-needed  # Requiere aprobación manual
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
