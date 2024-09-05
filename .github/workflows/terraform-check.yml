@@ -1,14 +1,12 @@
 name: 'Terraform Checks'
 
 on: 
-    # Ejecutar el pipeline en cada push a la rama main
-    push:
-      branches:
-        - main
-    # Ejecutar el pipeline en cada pull request a la rama main
-    pull_request:
-      branches:
-        - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   terraform:
@@ -20,20 +18,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-       # Paso 2: Configurar Terraform sin backend remoto
+      # Paso 2: Configurar Terraform sin backend remoto
       - name: Initialize Terraform without backend
         run: terraform init -backend=false
 
-      # Paso 3: Comprobación de Formato con terraform fmt
-      - name: Terraform Format Check
+      # Paso 3: Comprobación de Formato con terraform fmt y exportar errores
+      - name: Terraform Format Check with Diff
         run: terraform fmt -check -diff > format_errors.txt
         continue-on-error: true
 
       # Paso 4: Validación de los archivos con terraform validate
       - name: Terraform Validate
         run: terraform validate
-        continue-on-error: true
 
       # Paso 5: Mostrar los errores de formato
       - name: Show Format Errors
         run: cat format_errors.txt
+
+  # Job separado para aplicar terraform fmt si se aprueba
+  terraform_format:
+    name: 'Apply Terraform Fmt'
+    runs-on: ubuntu-latest
+    needs: terraform  # Solo se ejecuta después de que el primer job termine
+    environment: approval-needed  # Requiere aprobación manual
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Apply Terraform Fmt
+        run: terraform fmt
