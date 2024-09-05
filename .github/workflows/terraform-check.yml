@@ -62,3 +62,4 @@ jobs:
             git add .
             git commit -m "Apply terraform fmt changes"
             git push
+          fi
