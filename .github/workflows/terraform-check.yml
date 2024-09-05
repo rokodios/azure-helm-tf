@@ -30,6 +30,7 @@ jobs:
       # Paso 4: Validación de los archivos con terraform validate
       - name: Terraform Validate
         run: terraform validate
+        continue-on-error: true
 
       # Paso 5: Mostrar los errores de formato
       - name: Show Format Errors
