@@ -1,0 +1,33 @@
+name: 'Terraform Checks'
+
+on: 
+    # Ejecutar el pipeline en cada push a la rama main
+    push:
+      branches:
+        - main
+    # Ejecutar el pipeline en cada pull request a la rama main
+    pull_request:
+      branches:
+        - main
+
+jobs:
+  terraform:
+    name: 'Terraform Format & Validate'
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Checkout del código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Paso 2: Configurar Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Paso 3: Comprobación de Formato con terraform fmt
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      # Paso 4: Validación de los archivos con terraform validate
+      - name: Terraform Validate
+        run: terraform validate
