@@ -26,8 +26,12 @@ jobs:
 
       # Paso 3: Comprobación de Formato con terraform fmt
       - name: Terraform Format Check
-        run: terraform fmt -check
+        run: terraform fmt -check -diff > format_errors.txt
 
       # Paso 4: Validación de los archivos con terraform validate
       - name: Terraform Validate
         run: terraform validate
+
+      # Paso 5: Mostrar los errores de formato
+      - name: Show Format Errors
+        run: cat format_errors.txt
