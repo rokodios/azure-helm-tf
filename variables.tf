@@ -50,7 +50,7 @@ variable "charts" {
     chart_namespace  = string
     chart_repository = string
     chart_version    = string
-    values           = list(object({
+    values = list(object({
       name  = string
       value = string
     }))
