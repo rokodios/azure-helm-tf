@@ -50,6 +50,11 @@ jobs:
 
       - name: Apply Terraform Fmt
         run: terraform fmt
+
+      - name: Show Git User Info
+        run: |
+          echo "User: ${{ secrets.GIT_USER_NAME }}"
+          echo "Email: ${{ secrets.GIT_USER_EMAIL }}"
     
     # Paso 8: Comprobar si hubo cambios y ejecutar git diff solo si los hay
       - name: Check for modifications and show diff
