@@ -20,10 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Paso 2: Configurar Terraform
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-
       # Paso 3: Comprobación de Formato con terraform fmt
       - name: Terraform Format Check
         run: terraform fmt -check
