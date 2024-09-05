@@ -12,6 +12,8 @@ jobs:
   terraform:
     name: 'Terraform Format & Validate'
     runs-on: ubuntu-latest
+    outputs:
+      changes_detected: ${{ steps.detect_changes.outputs.changes }}
 
     steps:
       # Paso 1: Checkout del código
@@ -34,9 +36,9 @@ jobs:
         id: detect_changes
         run: |
           if terraform fmt -check -diff; then
-            echo "::set-output name=changes::false";
+            echo "changes=false" >> $GITHUB_ENV;
           else
-            echo "::set-output name=changes::true";
+            echo "changes=true" >> $GITHUB_ENV;
           fi
 
       # Paso 5: Mostrar los errores de formato
@@ -52,7 +54,7 @@ jobs:
   terraform_format:
     name: 'Apply Terraform Fmt'
     runs-on: ubuntu-latest
-    if: needs.terraform.outputs.changes == 'true'
+    if: needs.terraform.outputs.changes_detected == 'true'
     needs: terraform  # Solo se ejecuta después de que el primer job termine
     environment: git-sensible-info
     
