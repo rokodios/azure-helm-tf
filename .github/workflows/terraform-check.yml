@@ -29,21 +29,33 @@ jobs:
         run: terraform fmt -check -diff > format_errors.txt
         continue-on-error: true
 
-      # Paso 4: Validación de los archivos con terraform validate
-      - name: Terraform Validate
-        run: terraform validate
-        continue-on-error: true
+      # Paso 4: Definir salida de cambios basados en el código de salida de fmt
+      - name: Detect changes
+        id: detect_changes
+        run: |
+          if terraform fmt -check -diff; then
+            echo "::set-output name=changes::false";
+          else
+            echo "::set-output name=changes::true";
+          fi
 
       # Paso 5: Mostrar los errores de formato
       - name: Show Format Errors
         run: cat format_errors.txt
 
+      # Paso 6: Validación de los archivos con terraform validate
+      - name: Terraform Validate
+        run: terraform validate
+        continue-on-error: true
+
   # Job separado para aplicar terraform fmt si se aprueba y revision final de los cambios realizados 
   terraform_format:
     name: 'Apply Terraform Fmt'
     runs-on: ubuntu-latest
-    environment: git-sensible-info
+    if: needs.terraform.outputs.changes == 'true'
     needs: terraform  # Solo se ejecuta después de que el primer job termine
+    environment: git-sensible-info
+    
 
     steps:
       - name: Checkout repository
