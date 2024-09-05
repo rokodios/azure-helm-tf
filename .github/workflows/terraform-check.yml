@@ -20,6 +20,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+       # Paso 2: Configurar Terraform sin backend remoto
+      - name: Initialize Terraform without backend
+        run: terraform init -backend=false
+
       # Paso 3: Comprobación de Formato con terraform fmt
       - name: Terraform Format Check
         run: terraform fmt -check
