@@ -17,6 +17,8 @@ jobs:
       # Paso 1: Checkout del código
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # Se usa el GITHUB_TOKEN para permitir commit y push
 
       # Paso 2: Configurar Terraform sin backend remoto
       - name: Initialize Terraform without backend
@@ -52,8 +54,11 @@ jobs:
     # Paso 8: Comprobar si hubo cambios y ejecutar git diff solo si los hay
       - name: Check for modifications and show diff
         run: |
-          if git diff --exit-code > /dev/null; then
+          if git diff --quiet; then
             echo "No changes detected";
           else
-            git diff;
-          fi
+            git config user.name "${{ secrets.GIT_USER_NAME }}"
+            git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+            git add .
+            git commit -m "Apply terraform fmt changes"
+            git push
